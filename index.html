@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width: device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&family=Cabin+Sketch:wght@400;700&family=Cairo:wght@200..1000&family=El+Messiri:wght@400..700&family=Exo+2:ital,wght@0,100..900;1,100..900&family=Finger+Paint&family=Gochi+Hand&family=Honk&family=Jersey+10&family=Jersey+10+Charted&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Noto+Kufi+Arabic:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Radio+Canada+Big:ital,wght@0,400..700;1,400..700&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+        rel="stylesheet">
+
+    <title>لعبة الحركة</title>
+    <style>
+        .character2 {
+            transition: transform 0.5s ease-in-out;
+            /* الحركة تستغرق 0.5 ثانية */
+        }
+
+        .character2.moving-back {
+            transform: translateX(-200px);
+            /* نقل العنصر إلى الوراء بمقدار 200px */
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Almarai:wght@400;700;800&family=Cabin+Sketch:wght@400;700&family=Cairo:wght@200..1000&family=El+Messiri:wght@400..700&family=Exo+2:ital,wght@0,100..900;1,100..900&family=Finger+Paint&family=Gochi+Hand&family=Honk&family=Jersey+10&family=Jersey+10+Charted&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Noto+Kufi+Arabic:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Radio+Canada+Big:ital,wght@0,400..700;1,400..700&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+        body {
+            background:url(./lib/4156248.jpg);
+            object-fit: cover;
+
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            height: 100vh;
+            overflow: hidden;
+            font-family: "Merriweather", serif;
+        }
+        i{
+            font-size:5vh ;
+        }
+
+        .responsive-image-container {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .responsive-image {
+            width: 400%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .score {
+            position: absolute;
+            top: 4%;
+            right: 3%;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+
+        .logo {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 50px;
+            height: auto;
+        }
+
+        .character {
+            position: fixed;
+            top: 50%;
+            left: 5%;
+            transform: translateY(-50%) rotateY(180deg);
+            width: 150px;
+            height: auto;
+        }
+
+        .character2 {
+            position: fixed;
+            top: 50%;
+            right: -50%;
+            transform: translateY(-50%);
+            width: 150px;
+            height: auto;
+        }
+
+        .question {
+            font-size: unset;
+            position: fixed;
+            top: 25%;
+            transform: translateX(-50%);
+            /* right: 29%; */
+            left: 50%;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 10;
+            width: 65%;
+            font-size: 40px;
+        }
+
+        .answer-buttons {
+            position: fixed;
+            bottom: 30%;
+            left: 50%;
+            transform: translateX(-50%);
+            display: none;
+            gap: 20px;
+        }
+
+        .answer-button {
+            background-color: #d27900;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .answer-button.incorrect {
+            background-color: #dc3545;
+        }
+
+        .answer-button:hover {
+            opacity: 0.9;
+        }
+
+        /* أزرار الأسهم */
+        .arrow-buttons {
+            position: fixed;
+            bottom: 4.5%;
+            /* left: 75%; */
+            /* transform: translateX(-50%); */
+            right: 3%;
+            display: flex;
+            gap: 20px;
+        }
+
+        .arrow-button {
+            border-radius: 50%;
+            background-color: #000000d1;
+            color: white;
+            border: none;
+            padding: 20px 20px;
+            /* border-radius: 8px; */
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .arrow-button:hover {
+            opacity: 0.9;
+        }
+
+        .icon-button {
+            background-color: transparent;
+            border: none;
+            font-size: 2em;
+            /* حجم الأيقونة */
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        .icon-button:hover {
+            opacity: 0.8;
+        }
+
+        .fast {
+            width: 200px;
+            position: absolute;
+            bottom: -10px;
+            left: 5%;
+        }
+
+        .fast img {
+            height: 150px;
+            width: 200px;
+        }
+
+        @media (min-width: 1000px) {
+            .fast img {
+                height: 240px !important;
+                width: 280px !important;
+            }
+
+            .arrow-button{
+                font-size: 1em;
+padding: 50px 40px;
+
+            }
+
+        }
+
+    
+
+        @media (max-width: 900px) {
+
+            .answer-buttons {
+                position: fixed;
+                bottom: 25%;
+                left: 50%;
+                transform: translateX(-50%);
+                display: none;
+                gap: 20px;
+                font-size: 1.5em;
+
+            }
+
+            .question {
+                font-size: unset;
+                position: fixed;
+                top: 21%;
+                transform: translateX(-50%);
+                /* right: 29%; */
+                left: 50%;
+                background-color: rgba(255, 255, 255, 0.9);
+                padding: 20px 0;
+                border-radius: 8px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+                display: none;
+                z-index: -1;
+                width: 65%;
+                font-size: 35px;
+            }
+
+
+        }
+
+        .frame1,
+        .frame2 {
+            position: fixed;
+            height: 100vh;
+            width: 100vw;
+            transform: translateX(-200%);
+            clip-path: polygon(0 0, 100% 0, 75% 50%, 100% 100%, 0 100%);
+            z-index: 9999;
+            top: 0;
+            left: 0;
+        }
+
+        .animate-frame {
+            animation: frame 1s linear forwards;
+        }
+
+        .frame1 {
+            background-color: #5a54ea;
+            animation-delay: 0.25s;
+        }
+
+        .frame2 {
+            background-color: #eb9e0e;
+            animation-delay: 0.5s;
+        }
+
+        @keyframes frame {
+            0% {
+                transform: translateX(-200%);
+                clip-path: polygon(0 0,
+                        100% 0,
+                        75% 50%,
+                        100% 100%,
+                        0 100%);
+                /* Arrow shape */
+            }
+
+            100% {
+                transform: translateX(100%);
+                clip-path: polygon(0 0, 100% 0, 75% 50%, 100% 100%, 0 100%);
+            }
+        }
+        .icon-button{
+            position: absolute;
+            top: 13%;
+            right: 3%;
+            border-radius: 50%;
+    background-color: #d27900;
+    color: white;
+    border: none;
+    padding: 10px 5px;
+    /* border-radius: 8px; */
+    font-size: 1em !important;
+    cursor: pointer;
+    transition: background-color 0.3s;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas"></canvas>
+
+    <div class="responsive-image-container">
+        <img src="./4156248.jpg" alt="صورة متوافقة مع جميع الأجهزة" class="responsive-image" id="background">
+    </div>
+    <div class="frame1"></div>
+    <div class="frame2"></div>
+    <div class="score">Score: <span id="scoreValue">0</span></div>
+    <div class="logo">
+        <img src="./English easy logo-01.png" style="width: 150px;" alt="الشعار" class="logo-image">
+    </div>
+    <div class="fast">
+        <img src="./rb_13378.png" alt="الشعار" class="logo-image">
+    </div>
+
+    <img src="./fun-dog-3d-illustration.png" alt="شخصية" class="character" id="character">
+    <img src="./lib/space.png" alt="شخصية" class="character2" id="character2">
+
+    <div class="question" style="text-align: center;" id="question">ما هو الجواب الصحيح؟</div>
+
+    <div class="answer-buttons" id="answerButtons">
+        <!-- الأزرار ستضاف هنا ديناميكيًا -->
+    </div>
+
+    <div class="arrow-buttons">
+        <button class="arrow-button" id="rightArrow" style="display: none;"> ⬅️</button>
+        <button class="arrow-button" id="leftArrow"><i class="fa-solid fa-plane"></i></button>
+
+    </div>
+    <!-- إضافة أيقونة الزر "وردي" -->
+    <button id="pinkIconButton" class="icon-button">
+        <i class="fa-solid fa-volume-high"></i>   
+     </button>
+
+    <audio id="correctSound" src="correct-answer-sound.mp3"></audio>
+    <audio id="wrongSound" src="wrong-answer-sound.mp3"></audio>
+
+    <script>
+
+
+let W = window.innerWidth;
+    let H = window.innerHeight;
+    const canvas = document.getElementById("canvas");
+    const context = canvas.getContext("2d");
+    const maxConfettis = 130;
+    const particles = [];
+    let animationId;
+    let animationStartTime;
+    const possibleColors = [
+      "DodgerBlue",
+      "OliveDrab",
+      "Gold",
+      "Pink",
+      "SlateBlue",
+      "LightBlue",
+      "Violet",
+      "PaleGreen",
+      "SteelBlue",
+      "SandyBrown",
+      "Chocolate",
+      "Crimson",
+    ];
+    function randomFromTo(from, to) {
+      return Math.floor(Math.random() * (to - from + 1) + from);
+    }
+    function confettiParticle() {
+      this.x = W / 2;
+      this.y = H / 2;
+      this.r = randomFromTo(11, 33);
+      this.d = Math.random() * maxConfettis + 11;
+      this.color =
+        possibleColors[Math.floor(Math.random() * possibleColors.length)];
+      this.vx = (Math.random() - 0.5) * 40;
+      this.vy = (Math.random() - 0.5) * 30;
+      this.tilt = Math.floor(Math.random() * 33) - 11;
+      this.tiltAngleIncremental = Math.random() * 0.07 + 0.05;
+      this.tiltAngle = 0;
+      this.draw = function () {
+        context.beginPath();
+        context.lineWidth = this.r / 2;
+        context.strokeStyle = this.color;
+        context.moveTo(this.x + this.tilt + this.r / 3, this.y);
+        context.lineTo(this.x + this.tilt, this.y + this.tilt + this.r / 5);
+        context.stroke();
+      };
+      this.update = function () {
+        this.tiltAngle += this.tiltAngleIncremental;
+        this.x += this.vx;
+        this.y += this.vy;
+        this.tilt = Math.sin(this.tiltAngle) * 15;
+      };
+    }
+    function Draw() {
+      const currentTime = new Date().getTime();
+      if (currentTime - animationStartTime >= 500) {
+        cancelAnimationFrame(animationId);
+        context.clearRect(0, 0, W, H);
+        return;
+      }
+      context.clearRect(0, 0, W, H);
+      for (var i = 0; i < maxConfettis; i++) {
+        particles[i].update();
+        particles[i].draw();
+      }
+      animationId = requestAnimationFrame(Draw);
+    }
+    function explosion() {
+      particles.length = 0;
+      for (var i = 0; i < maxConfettis; i++) {
+        particles.push(new confettiParticle());
+      }
+      animationStartTime = new Date().getTime();
+      canvas.width = W;
+      canvas.height = H;
+      Draw();
+    }
+    function tripleboom() {
+      explosion();
+      setTimeout(() => {
+        explosion();
+        setTimeout(() => {
+          explosion();
+        }, 550);
+      }, 550);
+    }
+    window.addEventListener(
+      "resize",
+      function () {
+        W = window.innerWidth;
+        H = window.innerHeight;
+        canvas.width = window.innerWidth;
+        canvas.height = window.inner;
+      },
+      !1
+    );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        let movingRight = false;
+        let movingLeft = false;
+        let score = 0;
+        const speed = 8;
+        const frame1 = document.querySelector(".frame1");
+        const frame2 = document.querySelector(".frame2");
+        const background = document.getElementById('background');
+        const character = document.getElementById('character');
+        const character2 = document.getElementById('character2');
+        const question = document.getElementById('question');
+        const answerButtons = document.getElementById('answerButtons');
+        const scoreValue = document.getElementById('scoreValue');
+        const correctSound = document.getElementById('correctSound');
+        const wrongSound = document.getElementById('wrongSound');
+
+        const questions = [
+            {
+                question: "Get ....",
+                correctAnswer: "Up",
+                corrects: "Get Up",
+                options: ["At", "Up"],
+                characterImage: "./lib/plane4.png", // الصورة الأولى للشخصية
+                sounds: ["./lib/at.mp3", "./lib/up.mp3"], // الأصوات عند الضغط
+                questionSound: "./lib/get.mp3" ,// الصوت الخاص بالسؤال
+                child: "./lib/c2.mp3" ,
+                false2: "./lib/false2.aac" ,
+                child2: "./lib/good.mp3" // الصوت الخاص بالسؤال
+            },
+
+            {
+                question: ".... lunch",
+                correctAnswer: "Eat",
+                corrects: "Eat lunch",
+                options: ["Eat", "Take"],
+                characterImage: "./lib/plane3.png", // الصورة الأولى للشخصية
+                sounds: ["./lib/eat.mp3", "./lib/take"], // الأصوات عند الضغط
+                questionSound: "./lib/eatlunch.mp3" ,// الصوت الخاص بالسؤال
+                child: "./lib/c2.mp3" ,
+                false2: "./lib/false2.aac" ,
+                child2: "./lib/amazing.mp3" // الصوت الخاص بالسؤال
+            },
+          
+            {
+                question: ".... home",
+                correctAnswer: "Came",
+                corrects: "Came home",
+                options: ["Go", "Came"],
+                characterImage: "./lib/plane2.png", // الصورة الأولى للشخصية
+                sounds: ["./lib/go.mp3", "./lib/came.mp3"], // الأصوات عند الضغط
+                questionSound: "./lib/camehome.mp3" ,// الصوت الخاص بالسؤال
+                child: "./lib/c2.mp3" ,
+                false2: "./lib/false2.aac" ,
+                child2: "./lib/good.mp3" // الصوت الخاص بالسؤال
+            },
+            {
+                question: "Get ....4",
+                correctAnswer: "Up",
+                corrects: "Get Up",
+                options: ["At", "Up"],
+                characterImage: "./lib/plane4.png", // الصورة الأولى للشخصية
+                sounds: ["./lib/at.mp3", "./lib/up.mp3"], // الأصوات عند الضغط
+                questionSound: "./lib/get.mp3" ,// الصوت الخاص بالسؤال
+                child: "./lib/c2.mp3" ,
+                false2: "./lib/false2.aac" ,
+                child2: "./lib/good.mp3" // الصوت الخاص بالسؤال
+            },
+            {
+                question: "Get ....5",
+                correctAnswer: "Up",
+                corrects: "Get Up",
+                options: ["At", "Up"],
+                characterImage: "./lib/plane4.png", // الصورة الأولى للشخصية
+                sounds: ["./lib/at.mp3", "./lib/up.mp3"], // الأصوات عند الضغط
+                questionSound: "./lib/get.mp3" ,// الصوت الخاص بالسؤال
+                child: "./lib/c2.mp3" ,
+                false2: "./lib/false2.aac" ,
+                child2: "./lib/good.mp3" // الصوت الخاص بالسؤال
+            },
+            {
+                question: "Get ....6",
+                correctAnswer: "Up",
+                corrects: "Get Up",
+                options: ["At", "Up"],
+                characterImage: "./lib/plane4.png", // الصورة الأولى للشخصية
+                sounds: ["./lib/at.mp3", "./lib/up.mp3"], // الأصوات عند الضغط
+                questionSound: "./lib/get.mp3" ,// الصوت الخاص بالسؤال
+                child: "./lib/c2.mp3" ,
+                false2: "./lib/false2.aac" ,
+                child2: "./lib/good.mp3" // الصوت الخاص بالسؤال
+            },
+            {
+                question: "Get ....7",
+                correctAnswer: "Up",
+                corrects: "Get Up",
+                options: ["At", "Up"],
+                characterImage: "./lib/plane4.png", // الصورة الأولى للشخصية
+                sounds: ["./lib/at.mp3", "./lib/up.mp3"], // الأصوات عند الضغط
+                questionSound: "./lib/get.mp3" ,// الصوت الخاص بالسؤال
+                child: "./lib/c2.mp3" ,
+                false2: "./lib/false2.aac" ,
+                child2: "./lib/good.mp3" // الصوت الخاص بالسؤال
+            },
+            {
+                question: "Get ....8",
+                correctAnswer: "Up",
+                corrects: "Get Up",
+                options: ["At", "Up"],
+                characterImage: "./lib/plane4.png", // الصورة الأولى للشخصية
+                sounds: ["./lib/at.mp3", "./lib/up.mp3"], // الأصوات عند الضغط
+                questionSound: "./lib/get.mp3" ,// الصوت الخاص بالسؤال
+                child: "./lib/c2.mp3" ,
+                false2: "./lib/false2.aac" ,
+                child2: "./lib/good.mp3" // الصوت الخاص بالسؤال
+            },
+            {
+                question: "Get ....9",
+                correctAnswer: "Up",
+                corrects: "Get Up",
+                options: ["At", "Up"],
+                characterImage: "./lib/plane4.png", // الصورة الأولى للشخصية
+                sounds: ["./lib/at.mp3", "./lib/up.mp3"], // الأصوات عند الضغط
+                questionSound: "./lib/get.mp3" ,// الصوت الخاص بالسؤال
+                child: "./lib/c2.mp3" ,
+                false2: "./lib/false2.aac" ,
+                child2: "./lib/good.mp3" // الصوت الخاص بالسؤال
+            },
+            {
+                question: "Get ....10",
+                correctAnswer: "Up",
+                corrects: "Get Up",
+                options: ["At", "Up"],
+                characterImage: "./lib/plane4.png", // الصورة الأولى للشخصية
+                sounds: ["./lib/at.mp3", "./lib/up.mp3"], // الأصوات عند الضغط
+                questionSound: "./lib/get.mp3" ,// الصوت الخاص بالسؤال
+                child: "./lib/c2.mp3" ,
+                false2: "./lib/false2.aac" ,
+                child2: "./lib/good.mp3" // الصوت الخاص بالسؤال
+            },
+            // أضف المزيد من الأسئلة هنا
+        ];
+
+
+        let currentQuestionIndex = 0;
+        let characterReached = false;
+        let canMove = true;
+        let stepsBack = 0;
+
+        function moveBackgroundLeft() {
+            let backgroundPosition = parseInt(window.getComputedStyle(background).transform.split(',')[4]) || 0;
+            background.style.transform = `translateX(${backgroundPosition - speed}px)`;
+        }
+
+        function moveBackgroundRight() {
+            let backgroundPosition = parseInt(window.getComputedStyle(background).transform.split(',')[4]) || 0;
+            background.style.transform = `translateX(${backgroundPosition + speed}px)`;
+        }
+
+        function moveCharacter2Left() {
+            let character2Position = parseInt(window.getComputedStyle(character2).right);
+            if (character2Position < 60) {
+                character2.style.right = (character2Position + speed) + 'px';
+            } else {
+                stopCharacterAtPosition(60);
+            }
+        }
+
+        function moveCharacter2Right() {
+            let character2Position = parseInt(window.getComputedStyle(character2).right);
+            character2.style.right = (character2Position - speed) + 'px';
+        }
+
+        function stopCharacterAtPosition(position) {
+            movingRight = false;
+            movingLeft = false;
+            character2.style.right = position + 'px';
+            characterReached = true;
+            canMove = false;
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const currentQuestion = questions[currentQuestionIndex];
+
+            // تغيير الصورة والشخصية
+          
+
+            // تشغيل الصوت الخاص بالسؤال
+            const questionSound = new Audio(currentQuestion.questionSound);
+            questionSound.play();
+
+            setTimeout(() => {
+                questionSound.play();
+            }, 2000);
+
+            // إعادة الشخصية لموقعها الطبيعي بعد كل سؤال
+            character2.style.transition = "transform 0.5s";
+            character2.style.transform = "translateY(-50%)";
+
+            question.textContent = currentQuestion.question;
+            question.style.display = 'block';
+            answerButtons.style.display = 'flex';
+
+            // إعداد الأزرار للإجابات
+            answerButtons.innerHTML = ''; // إفراغ الأزرار السابقة
+            currentQuestion.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.className = 'answer-button';
+                button.textContent = option;
+                button.onclick = function () {
+                    checkAnswer(option);
+                    const sound = new Audio(currentQuestion.sounds[index]);
+                    sound.play();
+
+                };
+                answerButtons.appendChild(button);
+            });
+
+            // عند الإجابة الصحيحة، نوقف الحركة
+            document.getElementById('answerCorrect').addEventListener('click', function () {
+                stopMovementAfterCorrectAnswer();
+            });
+
+            // عند الإجابة الخاطئة، نعرض رسالة الخطأ ولكن الحركة لا تتوقف
+            document.getElementById('answerIncorrect').addEventListener('click', function () {
+                alert("الإجابة خاطئة. حاول مرة أخرى.");
+            });
+        }
+
+        // إيقاف الحركة بعد الإجابة الصحيحة
+        function stopMovementAfterCorrectAnswer() {
+            canMove = false;  // منع الحركة بعد الإجابة الصحيحة
+            score += 1;  // زيادة النقاط عند الإجابة الصحيحة
+            alert("إجابة صحيحة! النقاط: " + score);
+
+            // اختفاء الشخصية أو تحركها لمكان آخر
+            character2.style.display = 'none';  // اختفاء الشخصية بعد الإجابة الصحيحة
+
+        }
+
+
+        function hideQuestionAndButtons() {
+
+            question.style.display = 'none';
+            answerButtons.style.display = 'none';
+        }
+
+        function checkAnswer(selectedAnswer) {
+            const correctAnswer = questions[currentQuestionIndex].correctAnswer;
+            const currentQuestion = questions[currentQuestionIndex];
+
+            // إذا كانت الإجابة صحيحة
+            if (selectedAnswer === correctAnswer) {
+                correctSound.play();
+                // تشغيل الصوت مرة ثانية بعد 1 ثانية (يعني بعد انتهاء الصوت الأول)
+                setTimeout(() => {
+                    correctSound.play();
+                }, 1000);
+
+
+                const childSound2 = new Audio(currentQuestion.child2);
+                const childSound = new Audio(questions[0].child);
+                score += 1;
+                scoreValue.textContent = score;
+                question.innerHTML = `${questions[currentQuestionIndex].corrects}`;
+                question.style.color = "green";
+
+                setTimeout(function () {
+                    childSound2.play()
+
+                    setTimeout(function () {
+                        childSound.play();
+                        setTimeout(function () {
+                        tripleboom();
+                    }, 500)
+                    }, 1000)
+                      }, 1000)
+     
+                setTimeout(function () {
+                    
+                frame1.classList.add("animate-frame");
+                setTimeout(() => {
+                    hideQuestionAndButtons();
+                    nextQuestion();
+                    character2.src = currentQuestion.characterImage;
+                     // تعطيل الأزرار باستخدام JavaScript
+            rightArrow.disabled = false;
+            leftArrow.disabled = false;
+
+            // تطبيق التنسيقات على الأزرار من خلال JavaScript
+            [rightArrow, leftArrow].forEach(button => {
+                button.style.backgroundColor = "black"; // جعل الخلفية شفافة
+                button.style.cursor = "pointer"; // تغيير المؤشر عند المرور
+                button.style.opacity = "0.8"; // إضافة شفافية
+                button.disabled = false; // تعطيل الزر
+            });
+                }, 1000);
+                frame2.classList.add("animate-frame");
+
+            }, 3500)
+                // إخفاء السؤال والأزرار، والانتقال للسؤال التالي
+                // hideQuestionAndButtons();
+                // nextQuestion();
+
+                // إزالة الحركة بعد 3 ثوانٍ (3000 ميلي ثانية)
+                setTimeout(() => {
+                    frame1.classList.remove("animate-frame");
+                    frame2.classList.remove("animate-frame");
+                }, 5000);
+
+            } else {
+                wrongSound.play();
+                // تشغيل الصوت مرة ثانية بعد 1 ثانية (يعني بعد انتهاء الصوت الأول)
+                setTimeout(() => {
+                    const false2 = new Audio(questions[0].false2);
+                    // wrongSound.play();
+                    false2.play()
+                }, 1000);
+                setTimeout(() => {
+                    const questionSound = new Audio(currentQuestion.questionSound);
+                    questionSound.play();
+                }, 5500);
+                setTimeout(() => {
+                    const questionSound = new Audio(currentQuestion.questionSound);
+                    questionSound.play();
+                }, 7000);
+
+                score -= 1;
+                scoreValue.textContent = score;
+                repeatQuestion(); // تكرار السؤال في حالة الإجابة الخطأ
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex += 1;
+            if (currentQuestionIndex >= questions.length) {
+                endGame();
+                return;
+            }
+            hideQuestionAndButtons(); // إخفاء السؤال السابق
+            showQuestion(); // إظهار السؤال التالي
+        }
+
+        function hideQuestionAndButtons() {
+            question.style.display = 'none';
+            answerButtons.style.display = 'none';
+        }
+        function repeatQuestion() {
+            question.style.display = 'block';
+            answerButtons.style.display = 'flex';
+            setTimeout(() => {
+                hideQuestionAndButtons();
+                characterReached = false;
+                character2.style.right = '-50%';
+                startMovement();
+            }, 2000);
+        }
+
+        function nextQuestion() {
+
+            currentQuestionIndex += 1;
+            if (currentQuestionIndex >= questions.length) {
+                endGame();
+                return;
+            }
+            hideQuestionAndButtons();
+            character2.style.right = '-50%';
+            characterReached = false;
+            startMovement();
+        }
+
+        function endGame() {
+            alert(`انتهت اللعبة! نتيجتك النهائية: ${score}`);
+            location.reload();
+        }
+
+        function update() {
+            if (movingRight && canMove) {
+                moveBackgroundRight();
+                moveCharacter2Right();
+            }
+            if (movingLeft && canMove) {
+                moveBackgroundLeft();
+                moveCharacter2Left();
+            }
+            requestAnimationFrame(update);
+        }
+
+        document.getElementById('leftArrow').addEventListener('click', () => {
+            movingLeft = true;
+            movingRight = false;
+        });
+
+        document.getElementById('rightArrow').addEventListener('click', () => {
+            movingRight = true;
+            movingLeft = false;
+        });
+
+        document.addEventListener(' keyup', (event) => {
+            if (event.key === 'ArrowRight') {
+                movingRight = true;
+                movingLeft = false;
+            } else if (event.key === 'ArrowLeft') {
+                movingLeft = true;
+                movingRight = false;
+            }
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'ArrowRight') {
+                movingRight = false;
+            } else if (event.key === 'ArrowLeft') {
+                movingLeft = false;
+            }
+        });
+
+        function startMovement() {
+            characterReached = false;
+            canMove = true;
+            requestAnimationFrame(update);
+        }
+        // إضافة حدث لتشغيل الصوت مرتين عند الضغط على الزر
+        document.getElementById('pinkIconButton').addEventListener('click', function () {
+            // تشغيل الصوت مرتين
+            playSoundTwice();
+        });
+
+        document.getElementById('pinkIconButton').addEventListener('click', () => {
+            const sound = new Audio('./your-sound-file.mp3'); // استبدل بملف الصوت الخاص بك
+            sound.play();
+        });
+        document.getElementById('pinkIconButton').addEventListener('click', () => {
+            const sound = new Audio('./your-sound-file.mp3'); // استبدل بملف الصوت الخاص بك
+            sound.play();
+        });
+
+        // تابع الأحداث لأزرار السهم
+        document.getElementById('leftArrow').addEventListener('click', () => {
+            movingLeft = true;
+            movingRight = false;
+        });
+
+        document.getElementById('rightArrow').addEventListener('click', () => {
+            movingRight = true;
+            movingLeft = false;
+        });
+
+        // ضبط الأحداث عند رفع أو ضغط الزر
+        document.addEventListener('keyup', (event) => {
+            if (event.key === 'ArrowRight') {
+                movingRight = false;
+            } else if (event.key === 'ArrowLeft') {
+                movingLeft = false;
+            }
+        });
+
+
+        // wrong
+        function repeatQuestion() {
+            question.style.display = 'block';
+            answerButtons.style.display = 'flex';
+            setTimeout(() => {
+                // hideQuestionAndButtons();
+                characterReached = false;
+                // character2.style.right = '-50%';
+                startMovement();
+            }, 2000);
+        }
+
+        // أضف المزيد من المنطق حسب الحاجة...
+
+
+        startMovement();
+
+    </script>
+    <script>
+
+const startPosition = "-60px"; // أو أي قيمة تمثل نقطة البداية
+const checkInterval = 100; // الوقت بين كل تحقق (بالملي ثانية)
+
+
+
+
+
+
+
+
+
+
+
+
+
+// دالة للتحقق من موضع العنصر
+// function checkPosition() {
+    // const characterStyles = window.getComputedStyle(character2);
+    // const rightPosition = characterStyles.getPropertyValue('right');
+
+//     // شرط للتحقق إذا كانت قيمة right تساوي -50% أو -150px
+//     if (rightPosition <= "-50%") {
+//         rightArrow.disabled = false;
+//         leftArrow.disabled = false;
+
+//             // تطبيق التنسيقات على الأزرار من خلال JavaScript
+           
+//             rightArrow.style.backgroundColor = "black"; // جعل الخلفية شفافة
+//             rightArrow.style.cursor = "pointer"; // تغيير المؤشر عند المرور
+//             rightArrow.style.opacity = "0.2"; // إضافة شفافية
+//             rightArrow.disabled = true; // تعطيل الزر
+       
+//                 // console.log("القيمة تساوي -50% أو -150px، تنفيذ الشرط!");
+
+//         // تنفيذ الإجراء المطلوب هنا
+//     } if (rightPosition >= "-30%"){
+        
+      
+        
+//         // تنفيذ إجراء مختلف إذا لم تكن قيمة right تساوي -50% أو -150px
+//     }
+
+//     // استدعاء الدالة باستمرار للتحقق مرة أخرى
+//     requestAnimationFrame(checkPosition);
+// }
+
+// // بدء مراقبة الموضع
+// checkPosition();
+
+    </script>
+    <script>
+
+
+        // إضافة مستمعات الأحداث للأزرار للتحرك
+        document.getElementById('rightArrow').addEventListener('click', function () {
+            if (canMove) {
+                movingRight = true;
+                movingLeft = false;
+                moveCharacter2Left();  // تحريك الشخصية نحو اليسار
+            }
+        });
+
+        document.getElementById('leftArrow').addEventListener('click', function () {
+            if (canMove) {
+                movingLeft = true;
+                movingRight = false;
+                moveCharacter2Right();  // تحريك الشخصية نحو اليمين
+            }
+        });
+
+        // دوال التحرك عند الضغط على الأزرار
+        function moveCharacter2Left() {
+            let character2Position = parseInt(window.getComputedStyle(character2).right);
+            if (character2Position < 60) {
+                character2.style.right = (character2Position + speed) + 'px';
+            } else {
+                stopCharacterAtPosition(60);
+
+            }
+        }
+
+        function moveCharacter2Right() {
+            let character2Position = parseInt(window.getComputedStyle(character2).right);
+            character2.style.right = (character2Position - speed) + 'px';
+        }
+
+        function stopCharacterAtPosition(position) {
+            movingRight = false;
+            movingLeft = false;
+            character2.style.right = position + 'px';
+
+            // الآن يمكنك تنفيذ الكود الخاص بعرض السؤال بعد الوصول للنقطة المحددة
+            showQuestion();
+        }
+
+
+    </script>
+    <script>
+
+        document.getElementById('rightArrow').addEventListener('click', function () {
+            if (canMove) {
+                movingRight = true;
+                movingLeft = false;
+                moveCharacter2Left();  // تحريك الشخصية نحو اليسار
+            }
+        });
+
+        document.getElementById('leftArrow').addEventListener('click', function () {
+            if (canMove) {
+                movingLeft = true;
+                movingRight = false;
+                moveCharacter2Right();  // تحريك الشخصية نحو اليمين
+            }
+        });
+
+        // دوال التحرك عند الضغط على الأزرار
+        function moveCharacter2Left() {
+            let character2Position = parseInt(window.getComputedStyle(character2).right);
+            if (character2Position < 20) {
+                character2.style.right = (character2Position + 1) + 'px';
+            } else {
+                stopCharacterAtPosition(20);
+            }
+        }
+
+        function moveCharacter2Right() {
+            let character2Position = parseInt(window.getComputedStyle(character2).right);
+            character2.style.right = (character2Position - 1) + 'px';
+        }
+
+        function stopCharacterAtPosition(position) {
+
+            movingRight = false;
+            movingLeft = false;
+            character2.style.right = position + 'px';
+            const rightArrow = document.getElementById('rightArrow');
+            const leftArrow = document.getElementById('leftArrow');
+
+            // تعطيل الأزرار باستخدام JavaScript
+            rightArrow.disabled = true;
+            leftArrow.disabled = true;
+
+            // تطبيق التنسيقات على الأزرار من خلال JavaScript
+            [rightArrow, leftArrow].forEach(button => {
+                button.style.backgroundColor = "#656565"; // جعل الخلفية شفافة
+                button.style.border = "none"; // إزالة الحدود
+                button.style.fontSize = "24px"; // حجم الخط
+                button.style.cursor = "not-allowed"; // تغيير المؤشر عند المرور
+                button.style.opacity = "0.5"; // إضافة شفافية
+                button.disabled = true; // تعطيل الزر
+            });
+
+            showQuestion();
+        }
+
+
+
+    </script>
+
+    </script>
+    <script>
+        // إيقاف الحركة بعد الإجابة الصحيحة
+        function stopMovementAfterCorrectAnswer() {
+            canMove = false;  // منع الحركة بعد الإجابة الصحيحة
+            score += 1;  // زيادة النقاط عند الإجابة الصحيحة
+            alert("إجابة صحيحة! النقاط: " + score);
+
+            // اختفاء الشخصية أو تحركها لمكان آخر
+            character2.style.display = 'none';  // اختفاء الشخصية بعد الإجابة الصحيحة
+
+            // إعادة الخلفية إلى وضعها الأصلي
+            background.style.transform = 'translateX(0)';
+        }
+
+    </script>
+
+</body>
+
+</html>
